@@ -20,8 +20,8 @@ project:
     - "tt_um_enjimneering_bss_uart.v"
     - "bss_uart.v"
     - "bss_uart_params.vh"
-    - "bss_uart.rx.v"
-    - "bss_uart.tx.v"
+    - "bss_uart_rx.v"
+    - "bss_uart_tx.v"
     - "bss_fifo.v"
   
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
