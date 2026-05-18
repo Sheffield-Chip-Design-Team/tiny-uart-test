@@ -18,17 +18,20 @@ module bss_uart_tx #(
     localparam [2:0] PARITY = 3'd3;
     localparam [2:0] STOP   = 3'd4;
 
-    localparam integer TICK_W = (OVERSAMPLE <= 2) ? 1 : $clog2(OVERSAMPLE);
-    localparam [TICK_W-1:0] LAST_TICK = OVERSAMPLE - 1;
+  localparam integer TICK_W = (OVERSAMPLE <= 2) ? 1 : $clog2(OVERSAMPLE);
+  /* verilator lint_off WIDTHTRUNC */
+  localparam [TICK_W-1:0] LAST_TICK = OVERSAMPLE - 1;
+  /* verilator lint_on WIDTHTRUNC */
 
-    reg [2:0] state = IDLE;
+  /* verilator lint_off PROCASSINIT */
+  reg [       2:0] state = IDLE;
 
-    reg [2:0]        bit_index = 0;
-    reg [7:0]        tx_shift  = 0;
-    reg [TICK_W-1:0] tick_count = 0;
-    reg              parity_bit = 0;
-    reg              parity_en_latched = 0;
-    reg              parity_odd_latched = 0;
+  reg [       2:0] bit_index = 0;
+  reg [       7:0] tx_shift = 0;
+  reg [TICK_W-1:0] tick_count = 0;
+  reg              parity_bit = 0;
+  reg              parity_en_latched = 0;
+  /* verilator lint_on PROCASSINIT */
 
     always @(posedge clk) begin
         if (rst) begin
@@ -39,7 +42,6 @@ module bss_uart_tx #(
             bit_index <= 0;
             parity_bit <= 0;
             parity_en_latched <= 0;
-            parity_odd_latched <= 0;
         end else begin
             case (state)
             IDLE: begin
@@ -51,7 +53,6 @@ module bss_uart_tx #(
                 if (start) begin
                     tx_shift <= data_in;
                     parity_en_latched <= parity_en;
-                    parity_odd_latched <= parity_odd;
                     parity_bit <= parity_odd ? ~^data_in : ^data_in;
                     busy <= 1;
                     state <= START;
@@ -128,7 +129,6 @@ module bss_uart_tx #(
                 bit_index <= 0;
                 parity_bit <= 0;
                 parity_en_latched <= 0;
-                parity_odd_latched <= 0;
             end
             endcase
         end

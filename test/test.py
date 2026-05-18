@@ -9,6 +9,10 @@ from cocotb.triggers import ClockCycles, RisingEdge, Timer
 
 from vip import UART
 
+# play around with diff baud rates: with parity, without parity, etc. to test different configurations of the DUT
+# fixing the inputr muxing and output
+
+
 # Helper Functions
 async def reset_dut(dut):
     dut._log.info("Resetting DUT")

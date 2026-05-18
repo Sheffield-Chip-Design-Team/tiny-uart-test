@@ -1,14 +1,18 @@
 // Baud RATE parameters
 
-localparam CLK_FREQ   = 64_000_000;
+localparam CLK_FREQ = 64_000_000;
 localparam OVERSAMPLE = 4;
 
+/* verilator lint_off UNUSEDPARAM */
 parameter [3:0] BAUD_MODE = 4'd7;
+/* verilator lint_on UNUSEDPARAM */
 
 // Fractional-N divider (NCO)
 localparam integer ACC_W = 32;
 
 // Pre-compute the increment values for each baud rate (considering oversampling)
+/* verilator lint_off UNUSEDPARAM */
+/* verilator lint_off WIDTHTRUNC */
 localparam [ACC_W-1:0] INC_1200   = (((64'd1 << ACC_W) * (1200*OVERSAMPLE))   + (CLK_FREQ/2)) / CLK_FREQ;
 localparam [ACC_W-1:0] INC_2400   = (((64'd1 << ACC_W) * (2400*OVERSAMPLE))   + (CLK_FREQ/2)) / CLK_FREQ;
 localparam [ACC_W-1:0] INC_4800   = (((64'd1 << ACC_W) * (4800*OVERSAMPLE))   + (CLK_FREQ/2)) / CLK_FREQ;
@@ -20,4 +24,6 @@ localparam [ACC_W-1:0] INC_115200 = (((64'd1 << ACC_W) * (115200*OVERSAMPLE)) + 
 localparam [ACC_W-1:0] INC_230400 = (((64'd1 << ACC_W) * (230400*OVERSAMPLE)) + (CLK_FREQ/2)) / CLK_FREQ;
 localparam [ACC_W-1:0] INC_460800 = (((64'd1 << ACC_W) * (460800*OVERSAMPLE)) + (CLK_FREQ/2)) / CLK_FREQ;
 localparam [ACC_W-1:0] INC_921600 = (((64'd1 << ACC_W) * (921600*OVERSAMPLE)) + (CLK_FREQ/2)) / CLK_FREQ;
+/* verilator lint_on WIDTHTRUNC */
+/* verilator lint_on UNUSEDPARAM */
 
