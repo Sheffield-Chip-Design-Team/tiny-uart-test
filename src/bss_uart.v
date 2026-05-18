@@ -10,8 +10,9 @@ module bss_uart (
   input  wire       parity_en,
   input  wire       parity_odd,
 
-  output wire       rx_valid,
-  input  wire       rx_ready,
+  input  wire       rx_valid,
+  output wire       rx_ready,
+
   output wire [7:0] rx_data,
 
   input  wire       tx_valid,
@@ -23,7 +24,7 @@ module bss_uart (
 //---------------------------------------------------------------
 
   `include "bss_uart_params.vh"
-
+  
   parameter [2:0] DEFAULT_BAUD_MODE = 3'd7;
 
   //--------------------------------------------------------------
@@ -38,7 +39,7 @@ module bss_uart (
 
   // RX module
   wire [      7:0] rx_data_int;
-  wire             rx_valid_int;
+  wire             rx_ready_int;
 
   // TX module
   reg  [      7:0] tx_data_reg;
@@ -103,7 +104,7 @@ module bss_uart (
       .parity_odd(parity_odd),
       .rx        (uart_rx),
       .data_out  (rx_data_int),
-      .data_valid(rx_valid_int)
+      .data_valid(rx_ready_int)
   );
 
   bss_uart_tx #(
@@ -153,13 +154,13 @@ module bss_uart (
   );
 
   //--------------------------------------------------------------
-  // FIFO Access logic (Handshake) 
+  // FIFO Access logic
   //---------------------------------------------------------------
 
-  assign rx_fifo_write = rx_valid_int & ~rx_fifo_full;
-  assign rx_fifo_read  = rx_ready & ~rx_fifo_empty;
+  assign rx_fifo_write = rx_ready_int & ~rx_fifo_full;
+  assign rx_fifo_read  = rx_valid     & ~rx_fifo_empty;
 
-  assign rx_valid      = ~rx_fifo_empty;
+  assign rx_ready      = ~rx_fifo_empty;
   assign rx_data       = rx_fifo_out;
 
   assign tx_ready      = ~tx_fifo_full;

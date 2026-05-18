@@ -80,19 +80,19 @@ module tt_um_enjimneering_bss_uart (
 
   assign baud_select = uio_in[4:2];
   assign parity_en   = uio_in[5];
-  assign parity_odd  = uio_in[6];
+  assign rx_valid    = uio_in[6];
+
 
   // ui_in[7] = tx_valid strobe (pulse high for 1 cycle to queue a byte)
   // ui_in[6:0] = tx_data (7-bit, covers full ASCII range)
   assign tx_valid    = ui_in[7];
-  assign rx_ready    = ui_in[0];
   assign tx_data     = {1'b0, ui_in[6:0]};
 
   // ------------------------------------------------------------------ 
   //  Output mux                                                          
   // ------------------------------------------------------------------ 
 
-  wire [7:0] status_word = {6'b0, rx_valid, tx_ready};
+  wire [7:0] status_word = {6'b0, rx_ready, tx_ready};
 
   // uo_out: rx data during rx window, status otherwise
   assign uo_out       = rx_active ? rx_data : status_word;
@@ -103,6 +103,7 @@ module tt_um_enjimneering_bss_uart (
   /* verilator lint_off UNUSEDSIGNAL */
   wire unused_ok_ = &{ena, uio_in[7], uio_in[1]};
   /* verilator lint_on UNUSEDSIGNAL */
+  
   assign uio_oe = 8'b1000_0010;
 
 endmodule
