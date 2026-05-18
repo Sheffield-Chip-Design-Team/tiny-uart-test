@@ -40,14 +40,22 @@ module tb ();
   wire      tx_valid;
   wire      tx_ready;
 
-  assign ui_in[0] = rx_valid;
-  assign rx_ready = uo_out[0];
-  
+
   assign uio_in[4:2] = baud_sel;
-  assign tx = uio_out[1];
-  assign uio_in[0] = rx;
-  assign uio_in[5] = parity_en;
-  assign uio_in[6] = parity_type;
+  assign uio_in[5]   = parity_en;
+
+  assign rx_ready    = uo_out[1];
+  assign tx_ready    = uo_out[0];
+  
+  assign uio_in[0]   = rx;
+  assign uio_in[6]   = rx_valid;
+  assign rx_ready    = uo_out[0];
+  
+  assign ui_in[7]    = tx_valid;
+  assign tx          = uio_out[1];
+
+ 
+
 
   // Replace tt_um_example with your module name:
   tt_um_enjimneering_bss_uart user_project (

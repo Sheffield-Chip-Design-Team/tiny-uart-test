@@ -82,7 +82,6 @@ module tt_um_enjimneering_bss_uart (
   assign parity_en   = uio_in[5];
   assign rx_valid    = uio_in[6];
 
-
   // ui_in[7] = tx_valid strobe (pulse high for 1 cycle to queue a byte)
   // ui_in[6:0] = tx_data (7-bit, covers full ASCII range)
   assign tx_valid    = ui_in[7];
@@ -103,7 +102,7 @@ module tt_um_enjimneering_bss_uart (
   /* verilator lint_off UNUSEDSIGNAL */
   wire unused_ok_ = &{ena, uio_in[7], uio_in[1]};
   /* verilator lint_on UNUSEDSIGNAL */
-  
+
   assign uio_oe = 8'b1000_0010;
 
 endmodule
