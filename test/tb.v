@@ -29,15 +29,14 @@ module tb ();
 
   wire       tx;
   reg        rx;
+  wire       rx_ready;
+  wire       tx_ready;
 
   reg [2:0]  baud_sel_f;
   reg        parity_en_f;
-
-  wire       rx_ready;
   reg        rx_valid_f;
-
   reg        tx_valid_f;
-  wire       tx_ready;
+  reg [7:0]  tx_data_f;
 
   always @(*) begin
     uio_in[4:2] = baud_sel_f;
@@ -45,6 +44,8 @@ module tb ();
     uio_in[6]   = rx_valid_f;
     ui_in[7]    = tx_valid_f;
     uio_in[0]   = rx;
+    ui_in[6:0]  = tx_data_f;
+    ui_in[7]    = tx_valid_f;
   end
   
   assign rx_ready    = uo_out[1];
