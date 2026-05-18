@@ -1,7 +1,7 @@
 # Tiny Tapeout project information
 project:
   title:        "BSS UART"      # Project title
-  author:       "James Ashie Kotey, Kreesha Ramachandran SHaRC"      # Your name
+  author:       "James Ashie Kotey, Kreesha Ramachandran, Kwashie Andoh, SHaRC"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
   description:  "SHaRC Byte-Sized Serial UART IP Test Chip "      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
