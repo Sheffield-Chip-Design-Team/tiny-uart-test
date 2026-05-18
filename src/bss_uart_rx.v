@@ -11,27 +11,31 @@ module bss_uart_rx #(
     output reg        data_valid
 );
   // FSM states
-  localparam [2:0] IDLE   = 3'd0;
-  localparam [2:0] START  = 3'd1;
-  localparam [2:0] DATA   = 3'd2;
+  localparam [2:0] IDLE = 3'd0;
+  localparam [2:0] START = 3'd1;
+  localparam [2:0] DATA = 3'd2;
   localparam [2:0] PARITY = 3'd3;
-  localparam [2:0] STOP   = 3'd4;
+  localparam [2:0] STOP = 3'd4;
 
   // Calculate TICK_W based on OVERSAMPLE
   localparam integer TICK_W = (OVERSAMPLE <= 2) ? 1 : $clog2(OVERSAMPLE);
+  /* verilator lint_off WIDTHTRUNC */
   localparam [TICK_W-1:0] LAST_TICK = OVERSAMPLE - 1;
   localparam [TICK_W-1:0] START_TICK = (OVERSAMPLE / 2) - 1;
+  /* verilator lint_on WIDTHTRUNC */
 
-  reg [2:0] state = IDLE;
+  /* verilator lint_off PROCASSINIT */
+  reg  [       2:0] state = IDLE;
 
-  reg [2:0]        bit_index = 0;
-  reg [7:0]        rx_shift  = 0;
-  reg [TICK_W-1:0] tick_count = 0;
-  reg              parity_calc = 0;
-  reg              parity_ok = 1;
-  reg              parity_en_latched = 0;
-  reg              parity_odd_latched = 0;
-  wire             rx_clean;
+  reg  [       2:0] bit_index = 0;
+  reg  [       7:0] rx_shift = 0;
+  reg  [TICK_W-1:0] tick_count = 0;
+  reg               parity_calc = 0;
+  reg               parity_ok = 1;
+  reg               parity_en_latched = 0;
+  reg               parity_odd_latched = 0;
+  /* verilator lint_on PROCASSINIT */
+  wire              rx_clean;
 
   // Synchronize RX (2-stage data synchroniser)
   reg rx_d1, rx_d2;
