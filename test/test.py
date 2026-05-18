@@ -22,17 +22,18 @@ async def reset_dut(dut):
     await ClockCycles(dut.clk, 5)
     dut._log.info("DUT Reset complete")
 
-async def trigger_byte_frame(dut, data=256):
-    if data >= 256:
-        data = random.randint(0, 255)
+async def trigger_byte_frame (dut, data=128):
+    if data >= 128:
+        data = random.randint(0, 128)
        
-    data_byte = data & 0xFF 
+    data_byte = data & 0x7F
     dut._log.info(f"Requesting DUT to send byte: {format(hex(data_byte))}")
 
-    dut.tx_data.value = data_byte
-    dut.tx_start.value = 1
+    dut.tx_data_f.value  = data_byte
+    dut.tx_valid_f.value = 1
+
     await ClockCycles(dut.clk, 1)
-    dut.tx_start.value = 0
+    dut.tx_valid_f.value = 0
 
     return data_byte
 
