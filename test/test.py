@@ -98,7 +98,7 @@ async def test_rx(dut):
         
         dut.rx_valid_f.value = 1  
         await ClockCycles(dut.clk, 2)  # Wait for data to become available to propagate
-        dut.rx_valid.value = 0 # Deassert rx_valid after checking the output
+        dut.rx_valid_f.value = 0 # Deassert rx_valid after checking the output
 
         assert int(dut.uo_out.value) == int(byte), "frame not receieved correctly - rx_valid not asserted"
         
