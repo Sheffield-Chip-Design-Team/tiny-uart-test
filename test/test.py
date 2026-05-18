@@ -65,12 +65,12 @@ async def test_rx(dut):
     cocotb.start_soon(clock.start())
 
     #  Set UART config params
-    dut.baud_sel.value    = 3
-    dut.parity_en.value   = 0
+    dut.baud_sel_f.value    = 3
+    dut.parity_en_f.value   = 0
     
     # Initialize DUT inputs
-    dut.rx_valid.value    = 0
-    dut.tx_valid.value    = 0
+    dut.rx_valid_f.value    = 0
+    dut.tx_valid_f.value    = 0
 
     # Reset DUT
     await reset_dut(dut)
@@ -96,18 +96,11 @@ async def test_rx(dut):
 
         await ClockCycles(dut.clk, random.randint(0, 10))  # Wait for some cycles to before checking
         
-        # TODO - fix these lines - they are causing seg faults
+        dut.rx_valid_f.value = 1  
+        await ClockCycles(dut.clk, 2)  # Wait for data to become available to propagate
+        dut.rx_valid.value = 0 # Deassert rx_valid after checking the output
 
-        dut.rx_valid.value = 1  # Simulate rx_valid assertion after byte is sent
-        
-        await ClockCycles(dut.clk, 2)  # Wait for rx_valid to propagate
-        dut.rx_valid.value = 0 # Simulate rx_valid assertion after byte is sent 
-        
         assert int(dut.uo_out.value) == int(byte), "frame not receieved correctly - rx_valid not asserted"
-        
-        # # checks for received byte and status signals
-        # assert dut.rx_valid.value == 1, "frame not receieved correctly - rx_valid not asserted"
-        # assert dut.rx_data.value.to_unsigned() == byte, f"RX Data Mismatch: Expected {format(hex(byte))}, Got {format(hex(dut.rx_valid.value))}"
         
         dut._log.info(f"Byte: {format(hex(byte))} received correctly! Frame {i+1}/{total_tests} Passed.")
 

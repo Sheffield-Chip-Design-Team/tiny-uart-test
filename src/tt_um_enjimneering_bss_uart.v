@@ -21,7 +21,6 @@ module tt_um_enjimneering_bss_uart (
   wire       uart_tx;
   wire [2:0] baud_select;
   wire       parity_en;
-  wire       parity_odd;
   wire       tx_valid;
   wire       rx_ready;
   wire [7:0] tx_data;
@@ -32,7 +31,6 @@ module tt_um_enjimneering_bss_uart (
 
   // Mux window counter for RX output (2-cycle pulse)
   reg  [1:0] rx_win;  // counts down from 2 when rx handshake fires
-
   wire       rx_active = (rx_win != 2'b00);
 
   bss_uart u_bss_uart (
@@ -42,7 +40,7 @@ module tt_um_enjimneering_bss_uart (
       .uart_tx    (uart_tx),
       .baud_select(baud_select),
       .parity_en  (parity_en),
-      .parity_odd (parity_odd),
+      .parity_odd (1'b0),
       .rx_valid   (rx_valid),
       .rx_ready   (rx_ready),
       .rx_data    (rx_data),
@@ -80,10 +78,9 @@ module tt_um_enjimneering_bss_uart (
 
   assign baud_select = uio_in[4:2];
   assign parity_en   = uio_in[5];
+
   assign rx_valid    = uio_in[6];
 
-  // ui_in[7] = tx_valid strobe (pulse high for 1 cycle to queue a byte)
-  // ui_in[6:0] = tx_data (7-bit, covers full ASCII range)
   assign tx_valid    = ui_in[7];
   assign tx_data     = {1'b0, ui_in[6:0]};
 

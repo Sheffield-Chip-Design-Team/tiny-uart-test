@@ -17,6 +17,7 @@ module bss_uart (
 
   input  wire       tx_valid,
   output wire       tx_ready,
+  
   input  wire [7:0] tx_data
 );
 //--------------------------------------------------------------

@@ -28,29 +28,28 @@ module tb ();
 `endif
 
   wire       tx;
-  wire       rx;
+  reg        rx;
 
-  wire [2:0] baud_sel;
-  wire       parity_en;
-  wire       parity_type;
+  reg [2:0]  baud_sel_f;
+  reg        parity_en_f;
 
-  wire      rx_ready;
-  wire      rx_valid;
+  wire       rx_ready;
+  reg        rx_valid_f;
 
-  wire      tx_valid;
-  wire      tx_ready;
+  reg        tx_valid_f;
+  wire       tx_ready;
 
-  assign uio_in[4:2] = baud_sel;
-  assign uio_in[5]   = parity_en;
-
+  always @(*) begin
+    uio_in[4:2] = baud_sel_f;
+    uio_in[5]   = parity_en_f;
+    uio_in[6]   = rx_valid_f;
+    ui_in[7]    = tx_valid_f;
+    uio_in[0]   = rx;
+  end
+  
   assign rx_ready    = uo_out[1];
   assign tx_ready    = uo_out[0];
-  
-  assign uio_in[0]   = rx;
-  assign uio_in[6]   = rx_valid;
   assign rx_ready    = uo_out[0];
-  
-  assign ui_in[7]    = tx_valid;
   assign tx          = uio_out[1];
 
   // Replace tt_um_example with your module name:
