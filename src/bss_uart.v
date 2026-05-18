@@ -1,31 +1,31 @@
 
 module bss_uart (
-  input  wire       clk,
-  input  wire       rst_n,
+    input wire clk,
+    input wire rst_n,
 
-  input  wire       uart_rx,
-  output wire       uart_tx,
+    input  wire uart_rx,
+    output wire uart_tx,
 
-  input  wire [2:0] baud_select,
-  input  wire       parity_en,
-  input  wire       parity_odd,
+    input wire [2:0] baud_select,
+    input wire       parity_en,
+    input wire       parity_odd,
 
-  input  wire       rx_valid,
-  output wire       rx_ready,
+    input  wire rx_valid,
+    output wire rx_ready,
 
-  output wire [7:0] rx_data,
+    output wire [7:0] rx_data,
 
-  input  wire       tx_valid,
-  output wire       tx_ready,
-  
-  input  wire [7:0] tx_data
+    input  wire tx_valid,
+    output wire tx_ready,
+
+    input wire [7:0] tx_data
 );
-//--------------------------------------------------------------
-// Baud Paramaters
-//---------------------------------------------------------------
+  //--------------------------------------------------------------
+  // Baud Paramaters
+  //---------------------------------------------------------------
 
   `include "bss_uart_params.vh"
-  
+
   parameter [2:0] DEFAULT_BAUD_MODE = 3'd7;
 
   //--------------------------------------------------------------
@@ -45,6 +45,7 @@ module bss_uart (
   // TX module
   reg  [      7:0] tx_data_reg;
   reg              tx_has_data;
+  reg              tx_loading;
   wire             tx_start;
   wire             tx_busy;
 
@@ -159,7 +160,7 @@ module bss_uart (
   //---------------------------------------------------------------
 
   assign rx_fifo_write = rx_ready_int & ~rx_fifo_full;
-  assign rx_fifo_read  = rx_valid     & ~rx_fifo_empty;
+  assign rx_fifo_read  = rx_valid & ~rx_fifo_empty;
 
   assign rx_ready      = ~rx_fifo_empty;
   assign rx_data       = rx_fifo_out;
@@ -167,17 +168,23 @@ module bss_uart (
   assign tx_ready      = ~tx_fifo_full;
   assign tx_fifo_write = tx_valid & tx_ready;
 
-  assign tx_fifo_read  = (~tx_has_data) & (~tx_busy) & (~tx_fifo_empty);
+  assign tx_fifo_read  = (~tx_has_data) & (~tx_busy) & (~tx_fifo_empty) & (~tx_loading);
   assign tx_start      = tx_has_data & ~tx_busy;
 
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       tx_data_reg <= 8'd0;
       tx_has_data <= 1'b0;
+      tx_loading  <= 1'b0;
     end else begin
-      if (tx_fifo_read) begin
+      if (tx_loading) begin
+        // FIFO registered output is now valid — capture it
         tx_data_reg <= tx_fifo_out;
         tx_has_data <= 1'b1;
+        tx_loading  <= 1'b0;
+      end else if (tx_fifo_read) begin
+        // Initiated a FIFO read; wait one cycle for data_out to update
+        tx_loading <= 1'b1;
       end else if (tx_start) begin
         tx_has_data <= 1'b0;
       end

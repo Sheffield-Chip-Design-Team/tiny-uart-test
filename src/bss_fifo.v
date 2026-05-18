@@ -12,7 +12,7 @@ module bss_fifo #(
     output reg                   full
 );
 
-  reg [7:0] fifo[FIFO_DEPTH-1:0];
+  reg [DATA_WIDTH-1:0] fifo[FIFO_DEPTH-1:0];
 
   /* verilator lint_off PROCASSINIT */
   reg [$clog2(FIFO_DEPTH)-1:0] head = 0;

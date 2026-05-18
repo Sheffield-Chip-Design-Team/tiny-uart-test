@@ -1,5 +1,4 @@
-`default_nettype none
-`timescale 1ns / 1ps
+`default_nettype none `timescale 1ns / 1ps
 
 /* This testbench just instantiates the module and makes some convenient wires
    that can be driven / tested by the cocotb test.py.
@@ -32,11 +31,11 @@ module tb ();
   wire       rx_ready;
   wire       tx_ready;
 
-  reg [2:0]  baud_sel_f;
+  reg  [2:0] baud_sel_f;
   reg        parity_en_f;
   reg        rx_valid_f;
   reg        tx_valid_f;
-  reg [7:0]  tx_data_f;
+  reg  [7:0] tx_data_f;
 
   always @(*) begin
     uio_in[4:2] = baud_sel_f;
@@ -47,11 +46,10 @@ module tb ();
     ui_in[6:0]  = tx_data_f;
     ui_in[7]    = tx_valid_f;
   end
-  
-  assign rx_ready    = uo_out[1];
-  assign tx_ready    = uo_out[0];
-  assign rx_ready    = uo_out[0];
-  assign tx          = uio_out[1];
+
+  assign rx_ready = uo_out[1];
+  assign tx_ready = uo_out[0];
+  assign tx       = uio_out[1];
 
   // Replace tt_um_example with your module name:
   tt_um_enjimneering_bss_uart user_project (
