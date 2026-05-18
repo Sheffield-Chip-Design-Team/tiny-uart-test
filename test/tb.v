@@ -27,8 +27,30 @@ module tb ();
   wire VGND = 1'b0;
 `endif
 
+  wire       tx;
+  wire       rx;
+
+  wire [2:0] baud_sel;
+  wire       parity_en;
+  wire       parity_type;
+
+  wire      rx_ready;
+  wire      rx_valid;
+
+  wire      tx_valid;
+  wire      tx_ready;
+
+  assign ui_in[0] = rx_valid;
+  assign rx_ready = uo_out[0];
+  
+  assign uio_in[4:2] = baud_sel;
+  assign tx = uio_out[1];
+  assign uio_in[0] = rx;
+  assign uio_in[5] = parity_en;
+  assign uio_in[6] = parity_type;
+
   // Replace tt_um_example with your module name:
-  tt_um_example user_project (
+  tt_um_enjimneering_bss_uart user_project (
 
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST

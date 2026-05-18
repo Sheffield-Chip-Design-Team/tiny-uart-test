@@ -6,7 +6,7 @@ module bss_uart (
   input  wire       uart_rx,
   output wire       uart_tx,
 
-  input  wire [3:0] baud_select,
+  input  wire [2:0] baud_select,
   input  wire       parity_en,
   input  wire       parity_odd,
 
@@ -23,14 +23,15 @@ module bss_uart (
 //---------------------------------------------------------------
 
   `include "bss_uart_params.vh"
-  parameter [3:0] DEFAULT_BAUD_MODE = 4'd10;
+
+  parameter [2:0] DEFAULT_BAUD_MODE = 3'd7;
 
 //--------------------------------------------------------------
 // Internal Signals
 //---------------------------------------------------------------
   
   // baud clock generator
-  wire [3:0]       baud_mode;
+  wire [2:0]       baud_mode;
   reg  [ACC_W-1:0] baud_acc;
   reg  [ACC_W-1:0] baud_inc;
   reg              baud_tick_nx;
@@ -63,7 +64,7 @@ module bss_uart (
 // Baud Selection logic
 //---------------------------------------------------------------
 
-  assign baud_mode = (baud_select <= 4'd10) ?
+  assign baud_mode = (baud_select <= 4'd7) ?
     baud_select : DEFAULT_BAUD_MODE;
 
   always @(*) begin
@@ -75,11 +76,8 @@ module bss_uart (
       4'd4:  baud_inc = INC_19200;
       4'd5:  baud_inc = INC_38400;
       4'd6:  baud_inc = INC_57600;
-      4'd7:  baud_inc = INC_115200;
-      4'd8:  baud_inc = INC_230400;
-      4'd9:  baud_inc = INC_460800;
-      4'd10: baud_inc = INC_921600;
-      default: baud_inc = INC_115200;
+      4'd7:  baud_inc = INC_460800;
+      default: baud_inc = INC_460800; // default to 460800 baud
     endcase
   end
 

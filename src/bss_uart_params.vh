@@ -3,8 +3,6 @@
 localparam CLK_FREQ   = 64_000_000;
 localparam OVERSAMPLE = 4;
 
-// 0:1200, 1:2400, 2:4800, 3:9600, 4:19200, 5:38400,
-// 6:57600, 7:115200, 8:230400, 9:460800, 10:921600
 parameter [3:0] BAUD_MODE = 4'd7;
 
 // Fractional-N divider (NCO)
