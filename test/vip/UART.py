@@ -108,10 +108,16 @@ class UartVIP (VIP_Base):
      
         self.log.info(f"Received start bit: 0x{start_bit:01b}")
         self.log.info(f"Received data: 0x{received_data:02X}")
-        self.log.info(f"Received parity bit: 0x{parity_bit:02X}")
+        
+        if self.has_parity:
+          self.log.info(f"Received parity bit: 0x{parity_bit:02X}")
+
         self.log.info(f"Received stop bit: 0x{stop_bit:01b}")
 
-        return Uart_Transaction(data=received_data, calc_parity=False, parity_bit=parity_bit)
+        if self.has_parity:
+          return Uart_Transaction(data=received_data, calc_parity=False, parity_bit=parity_bit)
+        else:
+          return Uart_Transaction(data=received_data, has_parity=False)
         
 class Uart_Transaction:
 

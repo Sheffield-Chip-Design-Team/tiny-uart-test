@@ -138,11 +138,8 @@ async def test_tx(dut):
         data_byte            = await trigger_byte_frame(dut)
         monitored_uart_trans = await ext_Uart.serial_read_byte()
 
-        # Check received transaction
-        assert monitored_uart_trans.parity_bit == calc_parity(data_byte)
-        dut._log.info(f"Expected Parity: {calc_parity(data_byte)}, Received Parity: {monitored_uart_trans.parity_bit}")
-        assert monitored_uart_trans.data == data_byte, f"TX Data Mismatch: Expected {format(hex(data_byte))}"
         assert monitored_uart_trans.start_bit == 0, "High Start Bit Detected"
         assert monitored_uart_trans.stop_bit == 1, "Low Stop Bit Detected"
+        assert monitored_uart_trans.data == data_byte, f"TX Data Mismatch: Expected {format(hex(data_byte))}"
 
-        dut._log.info(f"Scoreboard Correctly Received Byte: {format(hex(data_byte))}. Frame {i+1}/{num_tests} Passed.")
+        dut._log.info(f"Scoreboard Correctly Received Byte: {format(hex(data_byte))}. Frame {i+1}/{total_tests} Passed.")

@@ -44,7 +44,7 @@ module bss_uart (
 
   // TX module
   reg  [      7:0] tx_data_reg;
-  reg              tx_has_data;
+  reg              tx_start_pending;
   wire             tx_start;
   wire             tx_busy;
 
@@ -167,21 +167,24 @@ module bss_uart (
   assign tx_ready      = ~tx_fifo_full;
   assign tx_fifo_write = tx_valid & tx_ready;
 
-  assign tx_fifo_read  = (~tx_has_data) & (~tx_busy) & (~tx_fifo_empty);
-  assign tx_start      = tx_has_data & ~tx_busy;
+  assign tx_fifo_read  = (~tx_start_pending) & (~tx_busy) & (~tx_fifo_empty);
+  assign tx_start      = tx_start_pending & ~tx_busy;
 
   always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       tx_data_reg <= 8'd0;
-      tx_has_data <= 1'b0;
+      tx_start_pending <= 1'b0;
     end else begin
       if (tx_fifo_read) begin
-        tx_data_reg <= tx_fifo_out;
-        tx_has_data <= 1'b1;
+        tx_start_pending <= 1'b1;
       end else if (tx_start) begin
-        tx_has_data <= 1'b0;
+        tx_start_pending <= 1'b0;
       end
     end
+  end
+  
+  always @(*) begin
+    tx_data_reg = tx_fifo_out;
   end
 
 endmodule
