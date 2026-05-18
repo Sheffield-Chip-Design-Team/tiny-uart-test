@@ -55,7 +55,7 @@ def calc_parity(data_byte, parity_type="odd"):
 async def test_rx(dut):
 
     # Number of random bytes to send
-    total_tests = 1
+    total_tests = 10
 
     # Connect to tx UART VIP
     ext_Uart = UART.UartVIP(dut, is_active=True, dut_rx_pin="rx", dut_tx_pin="tx")
@@ -83,7 +83,7 @@ async def test_rx(dut):
         await Timer(random.randint(1, 10), unit="us")
 
         # Send random byte to DUT rx bus
-        byte = 0xFF  # random.randint(0, 255)
+        byte = random.randint(0, 255)
         await ext_Uart.serial_write_byte(byte)
 
         ext_Uart.log.info(f"Sent Byte {format(hex(byte))} to DUT rx bus.")
@@ -118,7 +118,7 @@ async def test_rx(dut):
 async def test_tx(dut):
 
     # Number of random bytes to send
-    total_tests = 1
+    total_tests = 10
 
     # Connect to tx UART VIP
     ext_Uart = UART.UartVIP(dut, is_active=True, dut_rx_pin="rx", dut_tx_pin="tx")
