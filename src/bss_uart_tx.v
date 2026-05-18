@@ -58,7 +58,6 @@ module bss_uart_tx #(
                     state <= START;
                 end
             end
-
             START: begin
                 tx <= 0;
                 busy <= 1;
