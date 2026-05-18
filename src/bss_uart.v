@@ -69,14 +69,14 @@ module bss_uart (
 
   always @(*) begin
     case (baud_mode)
-      4'd0:  baud_inc = INC_1200;
-      4'd1:  baud_inc = INC_2400;
-      4'd2:  baud_inc = INC_4800;
-      4'd3:  baud_inc = INC_9600;
-      4'd4:  baud_inc = INC_19200;
-      4'd5:  baud_inc = INC_38400;
-      4'd6:  baud_inc = INC_57600;
-      4'd7:  baud_inc = INC_460800;
+      3'd0:  baud_inc = INC_1200;
+      3'd1:  baud_inc = INC_2400;
+      3'd2:  baud_inc = INC_4800;
+      3'd3:  baud_inc = INC_9600;
+      3'd4:  baud_inc = INC_19200;
+      3'd5:  baud_inc = INC_38400;
+      3'd6:  baud_inc = INC_57600;
+      3'd7:  baud_inc = INC_460800;
       default: baud_inc = INC_460800; // default to 460800 baud
     endcase
   end
